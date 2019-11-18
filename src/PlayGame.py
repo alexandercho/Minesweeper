@@ -41,8 +41,8 @@ def parse_move(g):
         moves = move.split()
         if len(moves) == 2:
             try:
-                row = int(moves[0]) - 1
-                col = int(moves[1]) - 1
+                row = int(moves[0])
+                col = int(moves[1])
                 if g.is_valid_move(row, col):
                     break
                 print('Please enter a valid move.')
@@ -61,14 +61,14 @@ if __name__ == '__main__':
         while not g.game_over:
             row, col = parse_move(g)
             g.play_move(row, col)
-            print(str(self.displayboard))
+            print(str(g.displayboard))
 
 
         if g.game_won:
             print('You win!')
         else:
             print('You lost.')
-            
+
         g.uncover_board()
         print(str(g.displayboard))
         print('Play again? (y/n)')

@@ -7,6 +7,16 @@ class DisplayBoard:
         self.flag = 'F'
         self.grid = [[self.covered_cell for i in range(N)] for j in range(N)]
 
+
+    def get_numbers(self):
+        nums = []
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.grid[i][j] not in ['X', 'M', '.']:
+                    nums += [(i,j,int(self.grid[i][j]))]
+        return nums
+    def is_number(self, row, col):
+        return self.grid[row][col] not in ['X', 'M', '.']
     def change_cell(self, row, col, val):
         if val == 0:
             self.grid[row][col] = self.empty_cell
@@ -27,16 +37,16 @@ class DisplayBoard:
     def __str__(self):
         space_size = len(str(self.size))
         display_string = ' ' + ' '*space_size
-        col_header = 1
+        col_header = 0
         for i in range(self.size):
             display_string += str(col_header) + ' ' +' '*(space_size - len(str(col_header)))
             col_header += 1
         display_string += '\n'
 
-        row_header = 1
+        row_header = 0
         for row in self.grid:
             display_string += str(row_header) + ' ' +' '*(space_size - len(str(row_header)))
-            col_header = 1
+            col_header = 0
             for col in row:
                 display_string += str(col) + ' '*(space_size)
                 col_header += 1

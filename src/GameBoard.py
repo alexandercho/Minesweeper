@@ -62,7 +62,6 @@ class GameBoard:
                     if self.in_grid(adj_row, adj_col) and (abs(i) + abs(j) == 1):
                         if not (self.is_mine(adj_row, adj_col) or (adj_row, adj_col) in uncovered_cells or (adj_row, adj_col) in queue):
                             queue.append((adj_row, adj_col))
-
         return uncovered_cells
 
 #O(N*M)
