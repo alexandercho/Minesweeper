@@ -1,5 +1,3 @@
-from GameBoard import *
-from DisplayBoard import *
 from Game import *
 
 def parse_play_game():
@@ -33,22 +31,21 @@ def parse_grid():
     return N, M
 
 def parse_move(g):
-    row, col = -1, -1
+    cell = (-1, -1)
     move = None
     print('Which cell do you want to uncover? (Enter row number and column number separated by space)')
-    while (not g.is_valid_move(row,col)):
+    while not g.is_valid_move(cell):
         move = input()
         moves = move.split()
         if len(moves) == 2:
             try:
-                row = int(moves[0])
-                col = int(moves[1])
-                if g.is_valid_move(row, col):
+                cell = (int(moves[0]), int(moves[1]))
+                if g.is_valid_move(cell):
                     break
                 print('Please enter a valid move.')
             except ValueError:
                 print('Please enter a valid move.')
-    return row, col
+    return cell
 
 if __name__ == '__main__':
     print('Welcome to Minesweeper. Play a game? (y/n)')
@@ -57,20 +54,16 @@ if __name__ == '__main__':
     while play_game == 'y':
         N, M = parse_grid()
         g = Game(N,M)
-        print(str(g.displayboard))
-        while not g.game_over:
+        print(str(g))
+        while not g.is_over():
             row, col = parse_move(g)
-            g.play_move(row, col)
-            print(str(g.displayboard))
-
-
-        if g.game_won:
+            g.play_move((row, col))
+            print(str(g))
+        if g.is_win():
             print('You win!')
         else:
             print('You lost.')
 
-        g.uncover_board()
-        print(str(g.displayboard))
         print('Play again? (y/n)')
 
 
