@@ -9,7 +9,7 @@ class Solver:
         M = 10
 
         self.win_count = 0
-        for i in range(1000):
+        for i in range(100000):
             game = Game(N, M)
             self.solve(game)
             if game.is_win():
