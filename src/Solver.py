@@ -9,11 +9,22 @@ class Solver:
         M = 10
 
         self.win_count = 0
-        for i in range(100000):
+        for i in range(1000):
+            game = Game(N, M)
+            self.solve_random(game)
+            if game.is_win():
+                self.win_count += 1
+        print("The win count with random moves is: " + str(self.win_count))
+
+        self.win_count = 0
+        for i in range(1000):
             game = Game(N, M)
             self.solve(game)
             if game.is_win():
                 self.win_count += 1
+
+
+
 
     def solve_random(self, game):
         while not game.is_over():
@@ -26,9 +37,10 @@ class Solver:
             game.play_move(self.get_next_move(game))
 
     def get_next_move(self, game):
+        uncovered_nums = game.uncovered_numbers()
         cell_to_index = dict((cell, ind) for cell,ind in zip(game.remaining_cells, range(len(game.remaining_cells))))
         index_to_cell = dict((cell_to_index[key], key) for key in cell_to_index)
-        uncovered_nums = game.uncovered_numbers()
+
 
         A = [[0 for i in range(len(game.remaining_cells))] for j in range(len(uncovered_nums))]
         y = []
@@ -40,6 +52,10 @@ class Solver:
                         A[i][cell_to_index[adj_cell]] = 1
             y += [uncovered_nums[i][2]]
         x = np.linalg.lstsq(A,y,rcond=1)[0].tolist()
+
+        no_adj_nums = [cell for cell in game.remaining_cells if not game.is_adj_to_num(cell)]
+        for cell in no_adj_nums:
+            x[cell_to_index[cell]] = (game.M - min(sum([1 for i in x if i > 0.5]),game.M-1))/len(game.remaining_cells)
         return index_to_cell[x.index(min(x))]
 
     def get_random_move(self, game):

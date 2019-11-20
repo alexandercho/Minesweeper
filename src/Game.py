@@ -35,15 +35,23 @@ class Game(object):
                 self._game_over = True
 
     def is_valid_move(self, cell):
-        return self.__in_grid(cell) and self.__is_covered(cell)
+        return cell in self.remaining_cells
 
     def uncovered_numbers(self):
         un = []
         for i in range(self.N):
             for j in range(self.N):
-                if self.display_grid[i][j] not in [self.covered_cell, self.mine, self.empty_cell]:
+                if self.display_grid[i][j] not in [self.covered_cell,
+                                                   self.mine, self.empty_cell]:
                     un.append((i, j, self.__get_cell((i, j)) ))
         return un
+
+    def is_adj_to_num(self, cell):
+        for adj_cell in self.get_adj_cells(cell):
+            if self.display_grid[adj_cell[0]][adj_cell[1]] not in [self.covered_cell,
+                                               self.mine, self.empty_cell]:
+                return True
+        return False
 
     def __generate_game_grid(self):
         mines = self.__get_mines()
@@ -84,14 +92,15 @@ class Game(object):
         if self.__is_mine(cell):
             return [cell]
         queue = [cell]
-        uncovered_cells = []
+        uncovered_cells = set()
         while queue:
             curr_cell = queue.pop(0)
-            uncovered_cells.append(curr_cell)
-            for adj_cell in self.get_adj_cells(curr_cell):
-                if not (self.__is_mine(adj_cell) or adj_cell in uncovered_cells
-                        or adj_cell in queue):
-                    queue.append(adj_cell)
+            uncovered_cells.add(curr_cell)
+            if self.__get_cell(curr_cell) <= 0:
+                for adj_cell in self.get_adj_cells(curr_cell):
+                    if not (self.__is_mine(adj_cell) or adj_cell in uncovered_cells
+                            or adj_cell in queue or not self.__is_covered(adj_cell)):
+                        queue.append(adj_cell)
         return uncovered_cells
 
     def __uncover_cell(self, cell):
