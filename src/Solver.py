@@ -9,7 +9,7 @@ class Solver:
         M = 10
 
         self.win_count = 0
-        for i in range(100000):
+        for i in range(1000):
             game = Game(N, M)
             self.solve(game)
             if game.is_win():
@@ -46,8 +46,10 @@ class Solver:
         x = np.linalg.lstsq(A,y,rcond=1)[0].tolist()
 
         no_adj_nums = [cell for cell in game.remaining_cells if not game.is_adj_to_num(cell)]
-        for cell in no_adj_nums:
-            x[cell_to_index[cell]] = (game.M - min(sum([1 for i in x if i > 0.5]),game.M-1))/len(game.remaining_cells)
+        if no_adj_nums:
+            prob_mine = (game.M - min(sum([1 for i in x if i > 0.5]),game.M-1))/len(no_adj_nums)
+            for cell in no_adj_nums:
+                x[cell_to_index[cell]] = prob_mine
         return index_to_cell[x.index(min(x))]
 
     def get_random_move(self, game):
