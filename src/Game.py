@@ -41,15 +41,13 @@ class Game(object):
         un = []
         for i in range(self.N):
             for j in range(self.N):
-                if self.display_grid[i][j] not in [self.covered_cell,
-                                                   self.mine, self.empty_cell]:
+                if self.display_grid[i][j] not in [self.covered_cell, self.empty_cell]:
                     un.append((i, j, self.__get_cell((i, j)) ))
         return un
 
     def is_adj_to_num(self, cell):
         for adj_cell in self.get_adj_cells(cell):
-            if self.display_grid[adj_cell[0]][adj_cell[1]] not in [self.covered_cell,
-                                               self.mine, self.empty_cell]:
+            if self.display_grid[adj_cell[0]][adj_cell[1]] not in [self.covered_cell, self.empty_cell]:
                 return True
         return False
 
